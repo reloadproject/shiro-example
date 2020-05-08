@@ -1,19 +1,23 @@
 package com.github.zhangkaitao.shiro.chapter2;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import junit.framework.Assert;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.Authenticator;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.config.IniFactorySupport;
 import org.apache.shiro.config.IniSecurityManagerFactory;
+import org.apache.shiro.env.BasicIniEnvironment;
+import org.apache.shiro.env.Environment;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.Factory;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 
@@ -24,7 +28,9 @@ import java.sql.Connection;
  * <p>Version: 1.0
  */
 public class LoginLogoutTest {
+    Logger log = LoggerFactory.getLogger(this.getClass());
 
+    //最简单的测试
     @Test
     public void testHelloworld() {
         //1、获取SecurityManager工厂，此处使用Ini配置文件初始化SecurityManager
@@ -40,27 +46,36 @@ public class LoginLogoutTest {
         UsernamePasswordToken token = new UsernamePasswordToken("zhang", "123");
 
         try {
+            Object o = token.getCredentials();
+            char[] password = (char[]) o;
+            log.info("----token.getCredentials() = " + new String(password));
             //4、登录，即身份验证
             subject.login(token);
+            log.info("---登陆成功---");
+            log.info("----subject = " + subject.isAuthenticated());
+
         } catch (AuthenticationException e) {
             //5、身份验证失败
+            log.error("---登陆失败---");
         }
 
-        Assert.assertEquals(true, subject.isAuthenticated()); //断言用户已经登录
+        Assert.assertTrue(subject.isAuthenticated()); //断言用户已经登录
 
         //6、退出
         subject.logout();
     }
 
-
+    //测试单realm
     @Test
     public void testCustomRealm() {
         //1、获取SecurityManager工厂，此处使用Ini配置文件初始化SecurityManager
-        Factory<org.apache.shiro.mgt.SecurityManager> factory =
-                new IniSecurityManagerFactory("classpath:shiro-realm.ini");
+        //下面这种过时了
+        //Factory<org.apache.shiro.mgt.SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro-realm.ini");
+        Environment factory = new BasicIniEnvironment("classpath:shiro-realm.ini");
 
         //2、得到SecurityManager实例 并绑定给SecurityUtils
-        org.apache.shiro.mgt.SecurityManager securityManager = factory.getInstance();
+        //org.apache.shiro.mgt.SecurityManager securityManager = factory.getInstance();//过时了
+        org.apache.shiro.mgt.SecurityManager securityManager = factory.getSecurityManager();
         SecurityUtils.setSecurityManager(securityManager);
 
         //3、得到Subject及创建用户名/密码身份验证Token（即用户身份/凭证）
@@ -68,19 +83,23 @@ public class LoginLogoutTest {
         UsernamePasswordToken token = new UsernamePasswordToken("zhang", "123");
 
         try {
+            String password = new String((char[])token.getCredentials()); //得到密码
+            System.out.println("----password = " + password);
             //4、登录，即身份验证
             subject.login(token);
+            System.out.println("---登陆成功---");
         } catch (AuthenticationException e) {
             //5、身份验证失败
             e.printStackTrace();
         }
 
-        Assert.assertEquals(true, subject.isAuthenticated()); //断言用户已经登录
+        Assert.assertTrue(subject.isAuthenticated()); //断言用户已经登录
 
         //6、退出
         subject.logout();
     }
 
+    //测试多realm
     @Test
     public void testCustomMultiRealm() {
         //1、获取SecurityManager工厂，此处使用Ini配置文件初始化SecurityManager
@@ -98,6 +117,8 @@ public class LoginLogoutTest {
         try {
             //4、登录，即身份验证
             subject.login(token);
+            System.out.println("---wang登陆成功");
+            System.out.println("----subject.isAuthenticated() = " + subject.isAuthenticated());
         } catch (AuthenticationException e) {
             //5、身份验证失败
             e.printStackTrace();
@@ -125,8 +146,11 @@ public class LoginLogoutTest {
         UsernamePasswordToken token = new UsernamePasswordToken("zhang", "123");
 
         try {
+            String password = new String((char[])token.getCredentials()); //得到密码
+            System.out.println("----password = " + password);
             //4、登录，即身份验证
             subject.login(token);
+            System.out.println("---数据库验证用户成功---");
         } catch (AuthenticationException e) {
             //5、身份验证失败
             e.printStackTrace();
@@ -142,6 +166,7 @@ public class LoginLogoutTest {
     @After
     public void tearDown() throws Exception {
         ThreadContext.unbindSubject();//退出时请解除绑定Subject到线程 否则对下次测试造成影响
+        System.out.println("----解除绑定----");
     }
 
 }

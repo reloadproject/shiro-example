@@ -1,6 +1,5 @@
 package com.github.zhangkaitao.shiro.chapter2;
 
-import junit.framework.Assert;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -15,6 +14,7 @@ import org.apache.shiro.util.Destroyable;
 import org.apache.shiro.util.Factory;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
 
 
@@ -32,6 +32,7 @@ public class AuthenticatorTest {
 
         //得到一个身份集合，其包含了Realm验证成功的身份信息
         PrincipalCollection principalCollection = subject.getPrincipals();
+        System.out.println("----principalCollection.asList() = " + principalCollection.asList());
         Assert.assertEquals(2, principalCollection.asList().size());
     }
 
@@ -40,6 +41,7 @@ public class AuthenticatorTest {
         login("classpath:shiro-authenticator-all-fail.ini");
     }
 
+    //只要有一个 Realm 验证成功即可，和 FirstSuccessfulStrategy不同，返回所有 Realm 身份验证成功的认证信息；
     @Test
     public void testAtLeastOneSuccessfulStrategyWithSuccess() {
         login("classpath:shiro-authenticator-atLeastOne-success.ini");
@@ -50,6 +52,7 @@ public class AuthenticatorTest {
         Assert.assertEquals(2, principalCollection.asList().size());
     }
 
+    //只要有一个 Realm 验证成功即可，只返回第一个 Realm 身份验证成功的认证信息，其他的忽略；
     @Test
     public void testFirstOneSuccessfulStrategyWithSuccess() {
         login("classpath:shiro-authenticator-first-success.ini");
@@ -82,8 +85,7 @@ public class AuthenticatorTest {
 
     private void login(String configFile) {
         //1、获取SecurityManager工厂，此处使用Ini配置文件初始化SecurityManager
-        Factory<org.apache.shiro.mgt.SecurityManager> factory =
-                new IniSecurityManagerFactory(configFile);
+        Factory<org.apache.shiro.mgt.SecurityManager> factory = new IniSecurityManagerFactory(configFile);
 
         //2、得到SecurityManager实例 并绑定给SecurityUtils
         org.apache.shiro.mgt.SecurityManager securityManager = factory.getInstance();
@@ -94,6 +96,7 @@ public class AuthenticatorTest {
         UsernamePasswordToken token = new UsernamePasswordToken("zhang", "123");
 
         subject.login(token);
+        System.out.println("---登陆成功---");
     }
 
     @After

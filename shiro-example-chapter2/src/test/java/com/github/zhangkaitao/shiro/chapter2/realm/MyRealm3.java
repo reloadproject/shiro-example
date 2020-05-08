@@ -34,4 +34,9 @@ public class MyRealm3 implements Realm {
         //如果身份认证验证成功，返回一个AuthenticationInfo实现；
         return new SimpleAuthenticationInfo(username + "@163.com", password, getName());
     }
+
+    @Override
+    public String toString() {
+        return "name=["+getName()+"]";
+    }
 }

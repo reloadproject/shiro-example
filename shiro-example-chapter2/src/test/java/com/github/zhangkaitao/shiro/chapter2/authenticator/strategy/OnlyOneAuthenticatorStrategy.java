@@ -42,6 +42,8 @@ public class OnlyOneAuthenticatorStrategy extends AbstractAuthenticationStrategy
                     throw new AuthenticationException("Authentication token of type [" + token.getClass() + "] " +
                             "could not be authenticated by any configured realms.  Please ensure that only one realm can " +
                             "authenticate these tokens.");
+                }else{
+                    System.out.println("---->>当前匹配上的只有一个用户名");
                 }
             }
         }

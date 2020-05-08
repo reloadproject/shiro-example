@@ -46,10 +46,14 @@ public class AtLeastTwoAuthenticatorStrategy extends AbstractAuthenticationStrat
 
     @Override
     public AuthenticationInfo afterAllAttempts(AuthenticationToken token, AuthenticationInfo aggregate) throws AuthenticationException {
-        if (aggregate == null || CollectionUtils.isEmpty(aggregate.getPrincipals()) || aggregate.getPrincipals().getRealmNames().size() < 2) {
+        if (aggregate == null || CollectionUtils.isEmpty(aggregate.getPrincipals())
+                || aggregate.getPrincipals().getRealmNames().size() < 2) {
+            System.out.println(">>>>ERROR! 匹配的用户名小于2个了");
             throw new AuthenticationException("Authentication token of type [" + token.getClass() + "] " +
                     "could not be authenticated by any configured realms.  Please ensure that at least two realm can " +
                     "authenticate these tokens.");
+        }else{
+            System.out.println("---->>匹配的用户名不小于2个");
         }
 
         return aggregate;
