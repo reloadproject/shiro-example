@@ -6,6 +6,7 @@ import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.session.Session;
 import org.junit.Test;
 
 /**
@@ -20,10 +21,12 @@ public class UserRealmTest extends BaseTest {
       public void testLoginSuccess() {
         login("classpath:shiro.ini", u1.getUsername(), password);
         Assert.assertTrue(subject().isAuthenticated());
-    }
 
+    }
+    //期盼抛出异常
     @Test(expected = UnknownAccountException.class)
     public void testLoginFailWithUnknownUsername() {
+        //会抛出未知账户异常
         login("classpath:shiro.ini", u1.getUsername() + "1", password);
     }
 
@@ -32,17 +35,21 @@ public class UserRealmTest extends BaseTest {
         login("classpath:shiro.ini", u1.getUsername(), password + "1");
     }
 
-    @Test(expected = LockedAccountException.class)
+    @Test//(expected = LockedAccountException.class)
     public void testLoginFailWithLocked() {
+        //会抛出账户锁定异常
         login("classpath:shiro.ini", u4.getUsername(), password + "1");
     }
 
-    @Test(expected = ExcessiveAttemptsException.class)
+    //演示登陆次数过多
+    @Test//(expected = ExcessiveAttemptsException.class)
     public void testLoginFailWithLimitRetryCount() {
         for(int i = 1; i <= 5; i++) {
             try {
                 login("classpath:shiro.ini", u3.getUsername(), password + "1");
-            } catch (Exception e) {/*ignore*/}
+            } catch (Exception e) {/*ignore*/
+                System.out.println("----["+i+"] e = " + e);
+            }
         }
         login("classpath:shiro.ini", u3.getUsername(), password + "1");
 

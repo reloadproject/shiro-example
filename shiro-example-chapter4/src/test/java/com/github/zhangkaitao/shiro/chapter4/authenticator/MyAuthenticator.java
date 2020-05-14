@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
-/**
+/** 自动注入配置文件中的值
  * <p>User: Zhang Kaitao
  * <p>Date: 14-1-27
  * <p>Version: 1.0

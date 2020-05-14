@@ -21,6 +21,7 @@ public class AuthenticatedServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Subject subject = SecurityUtils.getSubject();
+        System.out.println("----判断是否已经身份认证过的 subject.isAuthenticated() = " + subject.isAuthenticated());
         if(subject.isAuthenticated()) {
             req.getRequestDispatcher("/WEB-INF/jsp/authenticated.jsp").forward(req, resp);
         } else {

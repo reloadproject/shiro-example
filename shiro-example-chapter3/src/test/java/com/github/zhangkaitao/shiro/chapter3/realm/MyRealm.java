@@ -8,13 +8,18 @@ import org.apache.shiro.authz.permission.WildcardPermission;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 
-/**
+/** 此时我们继承 AuthorizingRealm 而不是实现 Realm 接口；推荐使用 AuthorizingRealm，
+ * 因为：
+ AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token)：表示获取身份验证信息；
+ AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals)：表示根据用户身份
+ 获取授权信息。
+ 这种方式的好处是当只需要身份验证时只需要获取身份验证信息而不需要获取授权信息。
  * <p>User: Zhang Kaitao
  * <p>Date: 14-1-26
  * <p>Version: 1.0
  */
 public class MyRealm extends AuthorizingRealm {
-
+    //表示根据用户身份获取授权信息。
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
@@ -22,11 +27,11 @@ public class MyRealm extends AuthorizingRealm {
         authorizationInfo.addRole("role2");
         authorizationInfo.addObjectPermission(new BitPermission("+user1+10"));
         authorizationInfo.addObjectPermission(new WildcardPermission("user1:*"));
-        authorizationInfo.addStringPermission("+user2+10");
-        authorizationInfo.addStringPermission("user2:*");
+        authorizationInfo.addStringPermission("+user2+10");//位移方式的权限
+        authorizationInfo.addStringPermission("user2:*");//通配符方式的权限
         return authorizationInfo;
     }
-
+    //身份认证,表示获取身份验证信息；
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         String username = (String)token.getPrincipal();  //得到用户名

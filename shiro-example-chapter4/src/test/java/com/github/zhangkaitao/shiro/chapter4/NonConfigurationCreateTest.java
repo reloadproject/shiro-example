@@ -29,12 +29,12 @@ public class NonConfigurationCreateTest {
 
         DefaultSecurityManager securityManager = new DefaultSecurityManager();
 
-        //设置authenticator
+        //设置 authenticator 认证者
         ModularRealmAuthenticator authenticator = new ModularRealmAuthenticator();
         authenticator.setAuthenticationStrategy(new AtLeastOneSuccessfulStrategy());
         securityManager.setAuthenticator(authenticator);
 
-        //设置authorizer
+        //设置 authorizer 授权人
         ModularRealmAuthorizer authorizer = new ModularRealmAuthorizer();
         authorizer.setPermissionResolver(new WildcardPermissionResolver());
         securityManager.setAuthorizer(authorizer);
@@ -44,10 +44,11 @@ public class NonConfigurationCreateTest {
         ds.setDriverClassName("com.mysql.jdbc.Driver");
         ds.setUrl("jdbc:mysql://localhost:3306/shiro");
         ds.setUsername("root");
-        ds.setPassword("");
-
+        ds.setPassword("root");
+        ds.setValidationQuery("select 1 ");
         JdbcRealm jdbcRealm = new JdbcRealm();
         jdbcRealm.setDataSource(ds);
+        //需要设置 jdbcRealm.permissionsLookupEnabled为 true 来开启权限查询
         jdbcRealm.setPermissionsLookupEnabled(true);
         securityManager.setRealms(Arrays.asList((Realm) jdbcRealm));
 
@@ -61,7 +62,7 @@ public class NonConfigurationCreateTest {
 
         Assert.assertTrue(subject.isAuthenticated());
 
-
+        System.out.println("----------验证通过----------");
 
     }
 }

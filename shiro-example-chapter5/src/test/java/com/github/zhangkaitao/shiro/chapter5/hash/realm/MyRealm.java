@@ -24,6 +24,7 @@ public class MyRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+        System.out.println("----principals = " + principals);
         return null;
     }
 

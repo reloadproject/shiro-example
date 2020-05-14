@@ -1,24 +1,12 @@
 package com.github.zhangkaitao.shiro.chapter4;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import junit.framework.Assert;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy;
-import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
-import org.apache.shiro.authz.ModularRealmAuthorizer;
-import org.apache.shiro.authz.permission.WildcardPermissionResolver;
-import org.apache.shiro.codec.Hex;
 import org.apache.shiro.config.IniSecurityManagerFactory;
-import org.apache.shiro.mgt.*;
-import org.apache.shiro.realm.Realm;
-import org.apache.shiro.realm.jdbc.JdbcRealm;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.Factory;
 import org.junit.Test;
-import sun.misc.BASE64Encoder;
-
-import java.util.Arrays;
 
 /**
  * <p>User: Zhang Kaitao
@@ -37,7 +25,7 @@ public class IniMainTest {
 
         //将SecurityManager设置到SecurityUtils 方便全局使用
         SecurityUtils.setSecurityManager(securityManager);
-
+        //得到实体,代表用户
         Subject subject = SecurityUtils.getSubject();
 
         UsernamePasswordToken token = new UsernamePasswordToken("zhang", "123");
@@ -45,7 +33,7 @@ public class IniMainTest {
 
         Assert.assertTrue(subject.isAuthenticated());
 
-
+        System.out.println("------验证通过-------");
 
     }
 }

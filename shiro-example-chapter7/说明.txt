@@ -1,0 +1,6 @@
+一定要注意配置文件的编码是utf-8无bom
+可以用notepad编码后,重新编译即可.
+
+http://shiro.apache.org/web.html
+http://shiro.apache.org/spring.html
+http://shiro.apache.org/webapp-tutorial.html

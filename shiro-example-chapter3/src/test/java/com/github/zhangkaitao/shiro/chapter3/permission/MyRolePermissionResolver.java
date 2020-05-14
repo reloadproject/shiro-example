@@ -6,6 +6,7 @@ import org.apache.shiro.authz.permission.WildcardPermission;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * <p>User: Zhang Kaitao
@@ -16,7 +17,9 @@ public class MyRolePermissionResolver implements RolePermissionResolver {
     @Override
     public Collection<Permission> resolvePermissionsInRole(String roleString) {
         if("role1".equals(roleString)) {
-            return Arrays.asList((Permission)new WildcardPermission("menu:*"));
+            //return Arrays.asList((Permission) new WildcardPermission("menu:*"));
+            //这样写更好
+            return Collections.singletonList((Permission) new WildcardPermission("menu:*"));
         }
         return null;
     }

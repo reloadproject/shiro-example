@@ -129,8 +129,11 @@
         </dependency>
         <dependency>
             <groupId>com.octo.captcha</groupId>
-            <artifactId>jcaptcha-integration-simple-servlet</artifactId>
-            <version>2.0-alpha-1</version>
+            <!--下面这个artifactId找不到-->
+            <!--<artifactId>jcaptcha-integration-simple-servlet</artifactId>-->
+            <!--<version>2.0-alpha-1</version>-->
+            <artifactId>jcaptcha-all</artifactId>
+            <version>1.0-RC6</version>
             <exclusions>
                 <exclusion>
                     <artifactId>servlet-api</artifactId>

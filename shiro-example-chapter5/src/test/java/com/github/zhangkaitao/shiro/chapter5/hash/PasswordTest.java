@@ -21,11 +21,13 @@ public class PasswordTest extends BaseTest {
     @Test
     public void testPasswordServiceWithMyRealm() {
         login("classpath:shiro-passwordservice.ini", "wu", "123");
+        System.out.println("---------login success---------");
     }
 
     @Test
     public void testPasswordServiceWithJdbcRealm() {
         login("classpath:shiro-jdbc-passwordservice.ini", "wu", "123");
+        System.out.println("---------login success---------");
     }
 
     @Test

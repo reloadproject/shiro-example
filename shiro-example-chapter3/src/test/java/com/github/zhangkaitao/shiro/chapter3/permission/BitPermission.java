@@ -18,7 +18,16 @@ import org.apache.shiro.authz.Permission;
  *     8 查看 1000
  *
  *  如 +user+10 表示对资源user拥有修改/查看权限
- *
+ *  1 -->01
+ *       10
+ *       11
+ *       100
+ *       101
+ *       110
+ *       111
+ *       1000
+ *       1001
+ *  10-->1010
  *  不考虑一些异常情况
  *
  * <p>User: Zhang Kaitao

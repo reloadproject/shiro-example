@@ -8,6 +8,7 @@ import org.apache.shiro.subject.Subject;
 import org.junit.Test;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -27,6 +28,9 @@ public class PrincialCollectionTest extends BaseTest {
         Object primaryPrincipal1 = subject.getPrincipal();
         PrincipalCollection princialCollection = subject.getPrincipals();
         Object primaryPrincipal2 = princialCollection.getPrimaryPrincipal();
+        System.out.println("----primaryPrincipal1 = " + primaryPrincipal1);
+        System.out.println("----primaryPrincipal2 = " + primaryPrincipal2);
+        System.out.println("----princialCollection = " + princialCollection);
 
         //但是因为多个Realm都返回了Principal，所以此处到底是哪个是不确定的
         Assert.assertEquals(primaryPrincipal1, primaryPrincipal2);
@@ -36,9 +40,11 @@ public class PrincialCollectionTest extends BaseTest {
         Set<String> realmNames = princialCollection.getRealmNames();
         System.out.println(realmNames);
 
-        //因为MyRealm1和MyRealm2返回的凭据都是zhang，所以排重了
+        //因为MyRealm1和MyRealm2返回的凭据(用户名)都是zhang，所以排重了
         Set<Object> principals = princialCollection.asSet(); //asList和asSet的结果一样
-        System.out.println(principals);
+        System.out.println("----principals = " + principals);
+        List list = princialCollection.asList();
+        System.out.println("----list = " + list);
 
         //根据Realm名字获取
         Collection<User> users = princialCollection.fromRealm("c");

@@ -55,6 +55,9 @@ public class User implements Serializable {
         this.salt = salt;
     }
 
+    /** 返回证书盐:用户名+盐
+     * @return username + salt
+     */
     public String getCredentialsSalt() {
         return username + salt;
     }

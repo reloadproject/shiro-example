@@ -24,6 +24,7 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("--------用户登陆--------");
         req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
     }
 
@@ -32,15 +33,17 @@ public class LoginServlet extends HttpServlet {
         String error = null;
         String username = req.getParameter("username");
         String password = req.getParameter("password");
-        Subject subject = SecurityUtils.getSubject();
+        System.out.println("----username = " + username);
+        System.out.println("----password = " + password);
+        Subject subject = SecurityUtils.getSubject();//从shiro获得subject,信息加载自shiro.ini
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         token.setRememberMe(true);
         try {
             subject.login(token);
         } catch (UnknownAccountException e) {
-            error = "用户名/密码错误";
+            error = "用户名/密码错误1";
         } catch (IncorrectCredentialsException e) {
-            error = "用户名/密码错误";
+            error = "用户名/密码错误2";
         } catch (AuthenticationException e) {
             //其他错误，比如锁定，如果想单独处理请单独catch处理
             error = "其他错误：" + e.getMessage();
@@ -50,6 +53,7 @@ public class LoginServlet extends HttpServlet {
             req.setAttribute("error", error);
             req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
         } else {//登录成功
+            req.getSession().setAttribute( "subject", subject);
             req.getRequestDispatcher("/WEB-INF/jsp/loginSuccess.jsp").forward(req, resp);
         }
     }

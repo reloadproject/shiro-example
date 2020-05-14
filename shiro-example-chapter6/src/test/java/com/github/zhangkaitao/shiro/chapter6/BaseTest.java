@@ -7,6 +7,7 @@ import com.github.zhangkaitao.shiro.chapter6.entity.User;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.config.IniSecurityManagerFactory;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.Factory;
 import org.apache.shiro.util.ThreadContext;
@@ -70,14 +71,14 @@ public abstract class BaseTest {
         u2 = new User("li", password);
         u3 = new User("wu", password);
         u4 = new User("wang", password);
-        u4.setLocked(Boolean.TRUE);
+        u4.setLocked(Boolean.TRUE);//第4个设置为锁定,数据库字段表示为1
         userService.createUser(u1);
         userService.createUser(u2);
         userService.createUser(u3);
         userService.createUser(u4);
         //5、关联用户-角色
         userService.correlationRoles(u1.getId(), r1.getId());
-
+        System.out.println("-----------初始化完成------------");
     }
 
 
@@ -102,6 +103,9 @@ public abstract class BaseTest {
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 
         subject.login(token);
+        //如果 create=true 如果没有会话将返回 null，而 create=true 如果没有会话会强制创建一个。
+        Session session = subject.getSession(true  );
+        System.out.println("----session = " + session);
     }
 
     public Subject subject() {

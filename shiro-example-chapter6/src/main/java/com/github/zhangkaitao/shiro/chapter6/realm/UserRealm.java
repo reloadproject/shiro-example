@@ -7,10 +7,12 @@ import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 
-/**
+/**  当 我 们 使 用 AuthorizingRealm 时 ， 如 果 身 份 验 证 成 功 ， 在 进 行 授 权 时 就 通 过
+ doGetAuthorizationInfo 方法获取角色/权限信息用于授权验证。
  * <p>User: Zhang Kaitao
  * <p>Date: 14-1-28
  * <p>Version: 1.0
@@ -18,21 +20,29 @@ import org.apache.shiro.util.ByteSource;
 public class UserRealm extends AuthorizingRealm {
 
     private UserService userService = new UserServiceImpl();
+    /*
+    获取 授权 信息,包含角色和权限信息
+    PrincipalCollection 是一个身份集合，因为我们
+    现在就一个 Realm，所以直接调用 getPrimaryPrincipal 得到之前传入的用户名即可；然后根
+    据用户名调用 UserService 接口获取角色及权限信息。
 
+     */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         String username = (String)principals.getPrimaryPrincipal();
 
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
+        //角色信息
         authorizationInfo.setRoles(userService.findRoles(username));
+        //权限信息
         authorizationInfo.setStringPermissions(userService.findPermissions(username));
 
         return authorizationInfo;
     }
-
+    // 获取 身份验证相关 信息
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-
+        //输入的用户名
         String username = (String)token.getPrincipal();
 
         User user = userService.findByUsername(username);

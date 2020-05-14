@@ -38,8 +38,10 @@ public class UserDaoImpl implements UserDao {
                 return psst;
             }
         }, keyHolder);
-
+        //捕获返回的值,此值由上面的 new String[] { "id" } 指定返回
+        System.out.println("----keyHolder.getKey() = " + keyHolder.getKey());
         user.setId(keyHolder.getKey().longValue());
+        System.out.println("----user = " + user);
         return user;
     }
 

@@ -18,7 +18,7 @@ import java.util.List;
  * <p>Date: 14-2-8
  * <p>Version: 1.0
  */
-public class MySessionDAO extends CachingSessionDAO {
+class MySessionDAO extends CachingSessionDAO {
 
     private JdbcTemplate jdbcTemplate = JdbcTemplateUtils.jdbcTemplate();
 

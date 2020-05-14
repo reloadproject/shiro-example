@@ -1,11 +1,15 @@
 package com.github.zhangkaitao.shiro.chapter3;
 
 import junit.framework.Assert;
+import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.authz.permission.WildcardPermission;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.List;
+
+import static java.util.Arrays.*;
 
 /**
  * <p>User: Zhang Kaitao
@@ -32,7 +36,7 @@ public class PermissionTest extends BaseTest {
         subject().checkPermission("user:create");
         //断言拥有权限：user:delete and user:update
         subject().checkPermissions("user:delete", "user:update");
-        //断言拥有权限：user:view 失败抛出异常
+        //断言拥有权限：user:view 失败抛出异常,会被方法头的注解异常捕获
         subject().checkPermissions("user:view");
     }
 
@@ -95,7 +99,29 @@ public class PermissionTest extends BaseTest {
         subject().checkPermission(new WildcardPermission("menu:view:1"));
 
     }
+    //自添加的一个验证授权的示例
+    @Test
+    public void testWildcardPermission7() {
+        login("classpath:shiro-permission.ini", "pengj", "123");
+        //可以验证role41,role42
+        subject().checkPermissions("system:user:update", "system:user:delete");
+        boolean[] b = subject().isPermitted(new String[]{"system:user:update", "system:user:delete"});
+        Boolean[] bb = new Boolean[]{b[0],b[1]};
+        System.out.println("----b = " + asList(bb));
+        //只能验证role42,不能验证role41会抛出异常
+        subject().checkPermissions("system:user:update,delete");
+    }
+    //自添加测试
+    @Test
+    public void testWildcardPermission8() {
+        login("classpath:shiro-permission.ini", "admin", "123");
+        //可以验证role51,role52,role53
+        //subject().checkPermissions("system:user:create,update,delete,view");
+        //只能验证role52 role53
+        //subject().checkPermissions("system:user:*");
+        //只能验证role52 role53
+        subject().checkPermissions("system:user:");
 
-
+    }
 
 }
