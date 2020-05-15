@@ -9,10 +9,12 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * <p>User: Zhang Kaitao
- * <p>Date: 14-2-4
- * <p>Version: 1.0
+/** Shiro 提供 roles 拦截器，其验证用户拥有所有角色，没有提供验证用户拥有任意角色的拦截器。
+ 流程：
+ 1、首先判断用户有没有任意角色，如果没有返回 false，将到 onAccessDenied 进行处理；
+ 2、如果用户没有角色，接着判断用户有没有登录，如果没有登录先重定向到登录；
+ 3、如果用户没有角色且设置了未授权页面（unauthorizedUrl），那么重定向到未授权页面；
+ 否则直接返回 401 未授权错误码。
  */
 public class AnyRolesFilter extends AccessControlFilter {
 
@@ -21,12 +23,12 @@ public class AnyRolesFilter extends AccessControlFilter {
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
-        String[] roles = (String[])mappedValue;
+        String[] roles = (String[])mappedValue;//角色集合
         if(roles == null) {
             return true;//如果没有设置角色参数，默认成功
         }
         for(String role : roles) {
-            if(getSubject(request, response).hasRole(role)) {
+            if(getSubject(request, response).hasRole(role)) {//拥有指定的角色时返回true
                 return true;
             }
         }
@@ -39,7 +41,7 @@ public class AnyRolesFilter extends AccessControlFilter {
         if (subject.getPrincipal() == null) {//表示没有登录，重定向到登录页面
             saveRequest(request);
             WebUtils.issueRedirect(request, response, loginUrl);
-        } else {
+        } else { //被拒绝时的处理
             if (StringUtils.hasText(unauthorizedUrl)) {//如果有未授权页面跳转过去
                 WebUtils.issueRedirect(request, response, unauthorizedUrl);
             } else {//否则返回401未授权状态码

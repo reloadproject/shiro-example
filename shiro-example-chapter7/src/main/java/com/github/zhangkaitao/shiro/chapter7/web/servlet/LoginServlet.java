@@ -49,6 +49,12 @@ public class LoginServlet extends HttpServlet {
         token.setRememberMe(true);
         try {
             subject.login(token);
+            /* 这样不行
+            User user = new User();
+            user.setUsername(username);
+            user.setPassword(password);
+            subject.getSession().setAttribute("user", user);*/
+
             /*
             添加上下面这段后就可以在页面中这样调用:
             <shiro:principal property="username"  />

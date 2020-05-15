@@ -17,7 +17,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-/**
+/** 会话验证调度器 ,无效session检查计划
  * <p>User: Zhang Kaitao
  * <p>Date: 14-2-9
  * <p>Version: 1.0

@@ -13,12 +13,16 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * <p>User: Zhang Kaitao
+/** doCreate/doUpdate/doDelete/doReadSession 分别代表创建/修改/删除/读取会话;
+ * 此处通过把会话序列化后存储到数据库实现；接着在 shiro-web.ini 中配置：
+ * sessionDAO=com.github.zhangkaitao.shiro.chapter10.session.dao.MySessionDAO
+ * 其他设置和之前一样，因为继承了 CachingSessionDAO；所有在读取时会先查缓存中是否
+ * 存在，如果找不到才到数据库中查找。
+
  * <p>Date: 14-2-8
  * <p>Version: 1.0
  */
-class MySessionDAO extends CachingSessionDAO {
+public class MySessionDAO extends CachingSessionDAO {
 
     private JdbcTemplate jdbcTemplate = JdbcTemplateUtils.jdbcTemplate();
 
