@@ -15,8 +15,16 @@
 <%--shiro:guest 会判断用户是否登陆了--%>
 <p>Hi <shiro:guest>Guest来宾</shiro:guest>
     <shiro:user><c:out value="${subject.principal}"/></shiro:user>!
-    ( <shiro:user><a href="<c:url value="/logout"/>">Log out</a></shiro:user>
+    ( <shiro:user><a href="<c:url value="/logout2"/>">Log out</a></shiro:user>
     <shiro:guest><a href="<c:url value="/login"/>">Log in</a></shiro:guest> )
+</p>
+
+<p>
+    <shiro:authenticated>
+<%--        property="username" 数据来自于  LoginServlet--%>
+        用户:<shiro:principal property="username"  />  你好,已经登陆成功了! <br>
+        密码:<shiro:principal property="password"  />   <br>
+    </shiro:authenticated>
 </p>
 
 </body>

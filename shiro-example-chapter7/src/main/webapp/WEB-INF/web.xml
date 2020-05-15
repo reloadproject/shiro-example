@@ -51,7 +51,12 @@
     </context-param>
     <context-param>
         <param-name>shiroConfigLocations</param-name>
-        <param-value>classpath:shiro.ini</param-value>
+        <!--基于 Basic  的拦截器身份验证-->
+        <!--<param-value>classpath:shiro-basicfilterlogin.ini</param-value>-->
+        <!--基于 表单 的拦截器身份验证-->
+        <param-value>classpath:shiro-formfilterlogin.ini</param-value>
+        <!--基于授权 （角色/ 权限验证）-->
+        <!--<param-value>classpath:shiro.ini</param-value>-->
     </context-param>
     <filter>
         <filter-name>shiroFilter</filter-name>

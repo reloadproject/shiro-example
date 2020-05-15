@@ -1,11 +1,14 @@
 package com.github.zhangkaitao.shiro.chapter7.web.servlet;
 
+import com.github.zhangkaitao.shiro.chapter7.web.servlet.model.User;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.*;
+import org.apache.shiro.mgt.RealmSecurityManager;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.subject.SubjectContext;
+import org.apache.shiro.subject.support.DefaultSubjectContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,11 +16,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
- * <p>User: Zhang Kaitao
- * <p>Date: 14-1-29
- * <p>Version: 1.0
+ * 参考: https://blog.csdn.net/uk8692/article/details/51098895
+ * 最近在看开涛老师讲的关于shiro的教程，看到JSP标签的时候，关于<shiro:principal property="username" />
+ * 这种写法，是要把一个带有username属性的对象转换为Prinipal后保存在session中，才能在页面上正确显示结果的。
+ * 由于开始学习，所以我用的是ini配置文件作为安全数据源的。在登录的方法中，调用了subject.login(token)后，
+ * 还要手动利用principal和realmName构造SimpleAuthenticationInfo对象，其实这里的pricipal是一个Object，
+ * 就是我们的带有username属性的实体对象，然后将SimpleAuthenticationInfo对象存放在session中。
+ *
  */
 @WebServlet(name = "loginServlet", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
@@ -40,6 +49,39 @@ public class LoginServlet extends HttpServlet {
         token.setRememberMe(true);
         try {
             subject.login(token);
+            /*
+            添加上下面这段后就可以在页面中这样调用:
+            <shiro:principal property="username"  />
+             */
+            //获取realmSecurityManager对象，其包含了很多信息，比如配置文件里面的数据
+            SecurityManager securityManager = SecurityUtils.getSecurityManager();
+            RealmSecurityManager realmSecurityManager = (RealmSecurityManager) securityManager;
+            Collection<Realm> collection = realmSecurityManager.getRealms();
+            System.out.println("----collection.size() = " + collection.size());
+            if (collection!=null && collection.size()>0){
+                Iterator iterator = collection.iterator();
+                while (iterator.hasNext()){
+                    Realm realm = (Realm)iterator.next();
+                    //得到默认的数据源名称，虽然默认的为iniRealm，也可以通过程序获得
+                    String realmName = realm.getName();
+                    //自定义的实体对象
+                    User user = new User();
+                    user.setUsername(username);
+                    user.setPassword(password);
+                    //得到SimpleAuthenticationInfo对象
+                    SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user,password,realmName);
+                    //通过源码分析在调用subject.login(token)后，会通过SubjectContext来保存到session，所以就直接复用了源码（DefaultSecurityManager类中）
+                    SubjectContext subjectContext = new DefaultSubjectContext();
+                    subjectContext.setAuthenticated(true);
+                    subjectContext.setAuthenticationToken(token);
+                    subjectContext.setAuthenticationInfo(info);
+                    if (subject != null) {
+                        subjectContext.setSubject(subject);
+                    }
+                    //此方法中进行保存
+                    realmSecurityManager.createSubject(subjectContext);
+                }
+            }
         } catch (UnknownAccountException e) {
             error = "用户名/密码错误1";
         } catch (IncorrectCredentialsException e) {

@@ -13,6 +13,10 @@
     ( <shiro:user><a href="<c:url value="/logout"/>">Log out</a></shiro:user>
     <shiro:guest><a href="<c:url value="/login"/>">Log in</a></shiro:guest> )
 </p>
-
+<p>
+    <shiro:authenticated>
+        用户:<shiro:principal />  你好 <br>
+    </shiro:authenticated>
+</p>
 </body>
 </html>
