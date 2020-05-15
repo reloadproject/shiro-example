@@ -19,7 +19,7 @@ import java.util.List;
  * 其他设置和之前一样，因为继承了 CachingSessionDAO；所有在读取时会先查缓存中是否
  * 存在，如果找不到才到数据库中查找。
 
- * <p>Date: 14-2-8
+ * <p>Date: 14-2-8 
  * <p>Version: 1.0
  */
 public class MySessionDAO extends CachingSessionDAO {
