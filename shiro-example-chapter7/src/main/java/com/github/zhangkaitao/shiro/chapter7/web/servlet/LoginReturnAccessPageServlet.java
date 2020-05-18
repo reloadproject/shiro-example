@@ -1,12 +1,7 @@
 package com.github.zhangkaitao.shiro.chapter7.web.servlet;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
-import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,8 +16,8 @@ import java.io.IOException;
  * 假设我们直接访问 “/formfilterlogin”的话登录成功将直接到默认的 successUrl。
 
  */
-@WebServlet(name = "formFilterLoginServlet", urlPatterns = "/formfilterlogin")
-public class FormFilterLoginServlet extends HttpServlet {
+@WebServlet(name = "formFilterLoginServlet", urlPatterns = "/loginReturnAccessPageServlet")
+public class LoginReturnAccessPageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

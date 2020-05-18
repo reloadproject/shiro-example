@@ -49,6 +49,7 @@ public class LoginServlet extends HttpServlet {
         token.setRememberMe(true);
         try {
             subject.login(token);
+
             /* 这样不行
             User user = new User();
             user.setUsername(username);
@@ -60,6 +61,7 @@ public class LoginServlet extends HttpServlet {
             <shiro:principal property="username"  />
              */
             //获取realmSecurityManager对象，其包含了很多信息，比如配置文件里面的数据
+			// <<但会失去配置的认证和授权信息>>
             SecurityManager securityManager = SecurityUtils.getSecurityManager();
             RealmSecurityManager realmSecurityManager = (RealmSecurityManager) securityManager;
             Collection<Realm> collection = realmSecurityManager.getRealms();
@@ -70,6 +72,7 @@ public class LoginServlet extends HttpServlet {
                     Realm realm = (Realm)iterator.next();
                     //得到默认的数据源名称，虽然默认的为iniRealm，也可以通过程序获得
                     String realmName = realm.getName();
+                    System.out.println("----realmName = " + realmName);
                     //自定义的实体对象
                     User user = new User();
                     user.setUsername(username);

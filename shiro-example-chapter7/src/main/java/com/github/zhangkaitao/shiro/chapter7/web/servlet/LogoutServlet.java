@@ -19,12 +19,13 @@ import java.io.IOException;
  * <p>Date: 14-1-29
  * <p>Version: 1.0
  */
-@WebServlet(name = "logoutServlet", urlPatterns = {"/logout","/logout2"})
+@WebServlet(name = "logoutServlet", urlPatterns = {"/logout"}) //,"/logout2"
 public class LogoutServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //要在这里退出
+        System.out.println(">>>>>>>>用户退出系统!");
         SecurityUtils.getSubject().logout();
         req.getRequestDispatcher("/WEB-INF/jsp/logoutSuccess.jsp").forward(req, resp);
     }
