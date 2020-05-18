@@ -49,7 +49,8 @@ public class LoginServlet extends HttpServlet {
         token.setRememberMe(true);
         try {
             subject.login(token);
-
+			PrincipalCollection principals = subject.getPrincipals();
+            System.out.println("----principals = " + principals);
             /* 这样不行
             User user = new User();
             user.setUsername(username);
@@ -60,8 +61,7 @@ public class LoginServlet extends HttpServlet {
             添加上下面这段后就可以在页面中这样调用:
             <shiro:principal property="username"  />
              */
-            //获取realmSecurityManager对象，其包含了很多信息，比如配置文件里面的数据
-			// <<但会失去配置的认证和授权信息>>
+            //获取realmSecurityManager对象，其包含了很多信息，比如配置文件里面的数据	
             SecurityManager securityManager = SecurityUtils.getSecurityManager();
             RealmSecurityManager realmSecurityManager = (RealmSecurityManager) securityManager;
             Collection<Realm> collection = realmSecurityManager.getRealms();
@@ -84,6 +84,11 @@ public class LoginServlet extends HttpServlet {
                     subjectContext.setAuthenticated(true);
                     subjectContext.setAuthenticationToken(token);
                     subjectContext.setAuthenticationInfo(info);
+					/*
+                        加上这句就可以了,否则会失去配置的认证和授权信息,在角色和权限验证时会出错,
+                        但是加上了页面中就不能使用  <shiro:principal property="username" 取值了
+                      */
+                    subjectContext.setPrincipals(principals);
                     if (subject != null) {
                         subjectContext.setSubject(subject);
                     }
