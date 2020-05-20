@@ -95,6 +95,7 @@
     <bean id="formAuthenticationFilter" class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
         <property name="usernameParam" value="username"/>
         <property name="passwordParam" value="password"/>
+        <!--这个 rememberMe 在提交登陆的表单里要用到-->
         <property name="rememberMeParam" value="rememberMe"/>
         <property name="loginUrl" value="/login.jsp"/>
     </bean>
@@ -114,6 +115,7 @@
                 /login.jsp = authc
                 /logout = logout
                 /authenticated.jsp = authc
+                /test.jsp = anon
                 /** = user
             </value>
         </property>
