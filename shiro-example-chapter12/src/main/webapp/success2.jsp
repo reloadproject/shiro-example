@@ -6,6 +6,7 @@
 </head>
 <body>
      <shiro:hasAnyRoles name="admin">
+         恭喜,登陆成功 success2 <br>
          <shiro:principal/>拥有角色admin
      </shiro:hasAnyRoles>
 </body>

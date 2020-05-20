@@ -10,17 +10,21 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
+    <!--只扫描指定注解: Controller , ControllerAdvice-->
     <context:component-scan base-package="com.github.zhangkaitao" use-default-filters="false">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
         <context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
     </context:component-scan>
 
-    <aop:config proxy-target-class="true"></aop:config>
+    <!--添加 Shiro Spring AOP 权限注解的支持,用于开启 Shiro Spring AOP 权限注解的支持；
+    <aop:config proxy-target-class="true">表示代理类。-->
+    <aop:config proxy-target-class="true"/>
     <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
         <property name="securityManager" ref="securityManager"/>
     </bean>
 
     <mvc:annotation-driven/>
+    <!--不通过controller,直接跳转到页面,注意必须启用上面的注解驱动-->
     <mvc:view-controller path="/" view-name="index"/>
 
     <!-- 默认的视图解析器 在上边的解析错误时使用 (默认使用html)- -->
@@ -32,8 +36,7 @@
     </bean>
 
     <!-- 控制器异常处理 -->
-    <bean id="exceptionHandlerExceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver">
-    </bean>
+    <bean id="exceptionHandlerExceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver" />
     <bean class="com.github.zhangkaitao.shiro.chapter12.web.exception.DefaultExceptionHandler"/>
 
 

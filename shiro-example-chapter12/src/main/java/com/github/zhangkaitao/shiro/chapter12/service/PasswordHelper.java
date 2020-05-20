@@ -6,7 +6,7 @@ import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.util.ByteSource;
 
-/**
+/**  密码帮忙类
  * <p>User: Zhang Kaitao
  * <p>Date: 14-1-28
  * <p>Version: 1.0
@@ -28,7 +28,7 @@ public class PasswordHelper {
     public void setHashIterations(int hashIterations) {
         this.hashIterations = hashIterations;
     }
-
+    //加密密码
     public void encryptPassword(User user) {
 
         user.setSalt(randomNumberGenerator.nextBytes().toHex());

@@ -2,6 +2,7 @@
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <html>
 <body>
+首页!
 <shiro:guest>
     欢迎游客访问，<a href="${pageContext.request.contextPath}/login.jsp">点击登录</a><br/>
 </shiro:guest>

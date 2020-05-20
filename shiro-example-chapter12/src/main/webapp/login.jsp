@@ -5,7 +5,7 @@
     <style>.error{color:red;}</style>
 </head>
 <body>
-
+登陆页面!
 <div class="error">${error}</div>
 <form action="" method="post">
     用户名：<input type="text" name="username"><br/>

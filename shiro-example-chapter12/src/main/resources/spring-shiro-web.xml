@@ -81,12 +81,16 @@
         <property name="usernameParam" value="username"/>
         <property name="passwordParam" value="password"/>
         <property name="loginUrl" value="/login.jsp"/>
+        <!--配置登陆成功后的跳转,默认是/-->
+        <!--<property name="successUrl" value="/index.jsp"/>-->
     </bean>
 
     <!-- Shiro的Web过滤器 -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
+        <!--配置登陆url-->
         <property name="loginUrl" value="/login.jsp"/>
+        <!--配置未授权的url-->
         <property name="unauthorizedUrl" value="/unauthorized.jsp"/>
         <property name="filters">
             <util:map>
@@ -95,6 +99,7 @@
         </property>
         <property name="filterChainDefinitions">
             <value>
+                <!--http://localhost:8080/index.jsp 这是可以直接访问的,因为配置的是anon -->
                 /index.jsp = anon
                 /unauthorized.jsp = anon
                 /login.jsp = authc

@@ -50,6 +50,7 @@ public class UserDaoImpl extends JdbcDaoSupport implements UserDao {
         getJdbcTemplate().update(sql, userId);
     }
 
+    //关联角色
     @Override
     public void correlationRoles(Long userId, Long... roleIds) {
         if(roleIds == null || roleIds.length == 0) {
@@ -62,7 +63,7 @@ public class UserDaoImpl extends JdbcDaoSupport implements UserDao {
             }
         }
     }
-
+    //非关联角色
     @Override
     public void uncorrelationRoles(Long userId, Long... roleIds) {
         if(roleIds == null || roleIds.length == 0) {
