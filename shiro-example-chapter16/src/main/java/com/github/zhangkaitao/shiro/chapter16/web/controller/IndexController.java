@@ -30,12 +30,14 @@ public class IndexController {
     public String index(@CurrentUser User loginUser, Model model) {
         Set<String> permissions = userService.findPermissions(loginUser.getUsername());
         List<Resource> menus = resourceService.findMenus(permissions);
+        System.out.println("----进入首页 menus = " + menus);
         model.addAttribute("menus", menus);
         return "index";
     }
 
     @RequestMapping("/welcome")
     public String welcome() {
+        System.out.println("------进入welcome.jsp--------");
         return "welcome";
     }
 

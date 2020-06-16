@@ -36,6 +36,7 @@
     <!-- 会话Cookie模板 -->
     <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
         <constructor-arg value="sid"/>
+        <!--如果cookie中设置了HttpOnly属性，那么通过js脚本将无法读取到cookie信息，这样能有效的防止XSS攻击，窃取cookie内容，这样就增加了cookie的安全性-->
         <property name="httpOnly" value="true"/>
         <property name="maxAge" value="180000"/>
     </bean>
@@ -104,6 +105,7 @@
                 /unauthorized.jsp = anon
                 /login.jsp = authc
                 /logout = logout
+                <!--表示访问该地址的用户是身份验证通过或 RememberMe 登录的都可以。-->
                 /** = user
             </value>
         </property>

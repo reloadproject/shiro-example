@@ -17,10 +17,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-/** 会话验证调度器 ,无效session检查计划
- * <p>User: Zhang Kaitao
- * <p>Date: 14-2-9
- * <p>Version: 1.0
+/** 会话验证调度器 ,无效session检查计划;
+ * 直接改造自 ExecutorServiceSessionValidationScheduler，如上代码是验证的核心代码，可
+ * 以根据自己的需求改造此验证调度器器；
  */
 public class MySessionValidationScheduler implements SessionValidationScheduler, Runnable {
 
@@ -28,8 +27,8 @@ public class MySessionValidationScheduler implements SessionValidationScheduler,
 
     /** Private internal log instance. */
     private static final Logger log = LoggerFactory.getLogger(MySessionValidationScheduler.class);
-
-    ValidatingSessionManager sessionManager;
+    //在配置文件中注入
+    private ValidatingSessionManager sessionManager;
     private ScheduledExecutorService service;
     private long interval = DefaultSessionManager.DEFAULT_SESSION_VALIDATION_INTERVAL;
     private boolean enabled = false;
@@ -93,8 +92,10 @@ public class MySessionValidationScheduler implements SessionValidationScheduler,
             for(String sessionStr : sessionList) {
                 try {
                     Session session = SerializableUtils.deserialize(sessionStr);
+                    //使用反射
                     Method validateMethod = ReflectionUtils.findMethod(AbstractValidatingSessionManager.class, "validate", Session.class, SessionKey.class);
                     validateMethod.setAccessible(true);
+                    //进行验证
                     ReflectionUtils.invokeMethod(validateMethod, sessionManager, session, new DefaultSessionKey(session.getId()));
                 } catch (Exception e) {
                     //ignore
